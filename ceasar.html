@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher</title>
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .speech {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Popup Styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .popup p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .copy-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Caesar Cipher Encoder</h1>
+        <div class="speech">Put the text to cipher in the input</div>
+        <div class="input">
+            <form id="form" onsubmit="event.preventDefault(); caesarCipher();">
+                <label for="inputText">Text:</label>
+                <input type="text" id="inputText" required>
+                <label for="shift">Shift:</label>
+                <input type="number" id="shift" value="3" required>
+                <button type="submit">Encrypt</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pop-up for the result -->
+    <div id="popup" class="popup">
+        <p id="popupResult"></p>
+        <button class="copy-btn" onclick="copyToClipboard()">Copy to Clipboard</button>
+    </div>
+
+    <script>
+        function caesarCipher() {
+            let text = document.getElementById("inputText").value;
+            let shift = parseInt(document.getElementById("shift").value);
+            let result = "";
+
+            for (let i = 0; i < text.length; i++) {
+                let char = text.charAt(i);
+                if (char.match(/[a-z]/i)) {
+                    let code = text.charCodeAt(i);
+                    if (code >= 65 && code <= 90) {
+                        char = String.fromCharCode(((code - 65 + shift) % 26) + 65);
+                    } else if (code >= 97 && code <= 122) {
+                        char = String.fromCharCode(((code - 97 + shift) % 26) + 97);
+                    }
+                }
+                result += char;
+            }
+
+            // Show the pop-up and display the result
+            document.getElementById("popupResult").innerText = result;
+            document.getElementById("popup").style.display = 'block';
+        }
+
+        function copyToClipboard() {
+            const resultText = document.getElementById("popupResult").innerText;
+            const tempInput = document.createElement("textarea");
+            tempInput.value = resultText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            // Hide the pop-up after copying
+            document.getElementById("popup").style.display = 'none';
+            alert("Copied to clipboard!");
+        }
+    </script>
+</body>
+</html>
